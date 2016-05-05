@@ -2,7 +2,7 @@
 	'use strict'
 	var loader = document.getElementById('loader');
 
-	var startView = [64.63,97.08],
+	var startView = [68.66,97.08],
 		startZoom = 3,
 		regionsData,
 		groups = [],
@@ -18,15 +18,7 @@
 	    accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw'
 	}).addTo(map);
 
-	map.dragging.disable();
-	map.on('zoomend', function(event) {
-		if(event.target['_animateToZoom'] === 0) {
-			map.dragging.disable();
-			map.setView(startView, startZoom);
-		} else {
-			map.dragging.enable();
-		}
-	});
+	
 
 	startPreloader();
 	regionsData = new L.GeoJSON.AJAX("ajax/leaflet_reserve.geojson", {
