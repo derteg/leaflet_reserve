@@ -1,22 +1,27 @@
 (function(){
 	'use strict'
 	var loader = document.getElementById('loader');
+	// переопределяем проекцию по умолчанию на коническую 'Asia North Albers Equal Area Conic'
+	var crs = new L.Proj.CRS('EPSG:102025',
+		'+proj=aea +lat_1=15 +lat_2=65 +lat_0=30 +lon_0=95 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs',
+		{
+			resolutions: [7168, 6144, 4096, 2048, 1024, 512], // задаем допустимые уровни зума
+			origin: [0, 0]
+		}
+	);
 
 	var startView = [64.63,97.08],
-		startZoom = 3,
+		startZoom = 0,
 		regionsData,
 		groups = [],
 		pointsGeoJson,
 		routesGeoJson;
 
-	var map = L.map('leafletMap').setView(startView, startZoom);
-
-	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-	    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-	    maxZoom: 18,
-	    id: 'mapbox.light',
-	    accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw'
-	}).addTo(map);
+	var map = L.map('leafletMap', {
+		crs: crs, 
+		maxZoom: crs.options.resolutions.length - 1, 
+		minZoom: 0,
+	}).setView(startView, startZoom);
 
 	map.dragging.disable();
 	map.on('zoomend', function(event) {
